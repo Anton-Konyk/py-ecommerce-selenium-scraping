@@ -135,7 +135,11 @@ def parse_all_pages() -> None:
 
 
 def get_all_products() -> None:
-    pass
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+
+    service = Service(ChromeDriverManager().install())
 
     with webdriver.Chrome(service=service, options=options) as driver:
         set_driver(driver)
