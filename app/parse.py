@@ -41,7 +41,7 @@ class Product:
     num_of_reviews: int
 
 
-PRODUCT_FIELDS = [fild.name for fild in fields(Product)]
+PRODUCT_FIELDS = [field.name for field in fields(Product)]
 
 
 _driver: WebDriver
