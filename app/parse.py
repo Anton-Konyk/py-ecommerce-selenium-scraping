@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+import csv
+import time
 from colorama import Fore, init
+from dataclasses import dataclass, astuple, fields
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.common import (
@@ -33,6 +36,8 @@ class Product:
     rating: int
     num_of_reviews: int
 
+
+PRODUCT_FIELDS = [fild.name for fild in fields(Product)]
 
 
 _driver: WebDriver
@@ -113,6 +118,16 @@ def parse_page_product(absolute_url: str) -> list[Product]:
     drivers = driver.find_elements(By.CLASS_NAME, "card-body")
 
     return [parse_single_product(driv) for driv in tqdm(drivers)]
+
+
+def parse_all_pages() -> None:
+    for page in tqdm(
+            ALL_PAGES,
+            desc=f"{Fore.GREEN}Main Progress: ",
+            position=0
+    ):
+        page_result = parse_page_product(page)
+        write_products_to_csv(page_result, page)
 
 def get_all_products() -> None:
     pass
