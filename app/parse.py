@@ -38,9 +38,14 @@ class Product:
 _driver: WebDriver
 
 
+def get_driver() -> WebDriver:
+    return _driver
+
+
 def set_driver(new_driver: WebDriver) -> None:
     global _driver
     _driver = new_driver
+
 
 def check_more_button(driver: WebDriver) -> None:
     try:
