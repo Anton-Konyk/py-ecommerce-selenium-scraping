@@ -49,7 +49,10 @@ _driver: WebDriver
 
 def get_driver() -> WebDriver:
     if _driver is None:
-        raise ValueError("WebDriver has not been installed. Use set_driver() for initialization.")
+        raise ValueError(
+            "WebDriver has not been installed. "
+            "Use set_driver() for initialization."
+        )
     return _driver
 
 
