@@ -24,6 +24,15 @@ class Product:
     num_of_reviews: int
 
 
+def check_cookies(driver: WebDriver) -> None:
+    try:
+        button = driver.find_element(By.CLASS_NAME, "acceptCookies")
+        while button.is_displayed():
+            button.click()
+            time.sleep(0.5)
+    except NoSuchElementException:
+        pass
+
 def parse_single_product(driver: WebDriver) -> Product:
 
     return Product(
