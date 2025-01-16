@@ -34,6 +34,14 @@ class Product:
     num_of_reviews: int
 
 
+
+_driver: WebDriver
+
+
+def set_driver(new_driver: WebDriver) -> None:
+    global _driver
+    _driver = new_driver
+
 def check_more_button(driver: WebDriver) -> None:
     try:
         wait = WebDriverWait(driver, 1)
@@ -79,6 +87,17 @@ def parse_single_product(driver: WebDriver) -> Product:
             driver.find_element(By.CLASS_NAME, "review-count").
             text.split()[0])
     )
+
+
+def write_products_to_csv(products: [Product], absolute_url: str) -> None:
+    filename = absolute_url.split("/")[-1]
+    if filename == "more":
+        filename = "home"
+    full_filename = filename + ".csv"
+    with open(full_filename, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(PRODUCT_FIELDS)
+        writer.writerows([astuple(product) for product in products])
 
 
 def parse_page_product(absolute_url: str) -> list[Product]:
