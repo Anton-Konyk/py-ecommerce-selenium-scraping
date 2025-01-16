@@ -1,8 +1,15 @@
 from dataclasses import dataclass
 from urllib.parse import urljoin
 from selenium import webdriver
+from selenium.common import (
+    NoSuchElementException,
+    ElementClickInterceptedException,
+    TimeoutException
+)
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 
 
 BASE_URL = "https://webscraper.io/"
@@ -24,6 +31,26 @@ class Product:
     num_of_reviews: int
 
 
+def check_more_button(driver: WebDriver) -> None:
+    try:
+        wait = WebDriverWait(driver, 1)
+        button = wait.until(
+            ec.presence_of_element_located((By.CLASS_NAME,
+                                            "ecomerce-items-scroll-more")))
+        while button.is_displayed():
+            try:
+                button = wait.until(
+                    ec.element_to_be_clickable((By.CLASS_NAME,
+                                                "ecomerce-items-scroll-more")))
+                button.click()
+                time.sleep(0.5)
+            except ElementClickInterceptedException:
+                pass
+    except TimeoutException:
+        pass
+    except NoSuchElementException:
+        pass
+
 def check_cookies(driver: WebDriver) -> None:
     try:
         button = driver.find_element(By.CLASS_NAME, "acceptCookies")
@@ -32,6 +59,7 @@ def check_cookies(driver: WebDriver) -> None:
             time.sleep(0.5)
     except NoSuchElementException:
         pass
+
 
 def parse_single_product(driver: WebDriver) -> Product:
 
