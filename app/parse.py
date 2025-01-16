@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import csv
 import time
 from colorama import Fore, init
@@ -12,9 +11,14 @@ from selenium.common import (
 )
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from tqdm import tqdm
+from webdriver_manager.chrome import ChromeDriverManager
+
+
 init(autoreset=True)
 
 
@@ -129,8 +133,13 @@ def parse_all_pages() -> None:
         page_result = parse_page_product(page)
         write_products_to_csv(page_result, page)
 
+
 def get_all_products() -> None:
     pass
+
+    with webdriver.Chrome(service=service, options=options) as driver:
+        set_driver(driver)
+        parse_all_pages()
 
 
 if __name__ == "__main__":
