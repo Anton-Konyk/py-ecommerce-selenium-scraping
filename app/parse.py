@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from colorama import Fore, init
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.common import (
@@ -10,6 +11,8 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from tqdm import tqdm
+init(autoreset=True)
 
 
 BASE_URL = "https://webscraper.io/"
@@ -51,6 +54,7 @@ def check_more_button(driver: WebDriver) -> None:
     except NoSuchElementException:
         pass
 
+
 def check_cookies(driver: WebDriver) -> None:
     try:
         button = driver.find_element(By.CLASS_NAME, "acceptCookies")
@@ -75,6 +79,16 @@ def parse_single_product(driver: WebDriver) -> Product:
             driver.find_element(By.CLASS_NAME, "review-count").
             text.split()[0])
     )
+
+
+def parse_page_product(absolute_url: str) -> list[Product]:
+    driver = get_driver()
+    driver.get(absolute_url)
+    check_cookies(driver)
+    check_more_button(driver)
+    drivers = driver.find_elements(By.CLASS_NAME, "card-body")
+
+    return [parse_single_product(driv) for driv in tqdm(drivers)]
 
 def get_all_products() -> None:
     pass
